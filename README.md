@@ -112,10 +112,66 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Building for Production
 
+### Web Application
 ```bash
 npm run build
 npm start
 ```
+
+### Desktop Application (Electron)
+
+#### Quick Build (Automated Script)
+
+**For Linux/Mac:**
+```bash
+./build-electron.sh
+```
+
+**For Windows:**
+```batch
+build-electron.bat
+```
+
+The script will:
+1. Install dependencies (if needed)
+2. Build the Next.js application
+3. Prompt you to select platforms to build
+4. Create installable packages in the `dist/` folder
+
+#### Manual Build Commands
+
+**Development mode:**
+```bash
+npm run electron:dev
+```
+
+**Build for specific platform:**
+```bash
+# Windows
+npm run electron:build -- --win
+
+# macOS
+npm run electron:build -- --mac
+
+# Linux
+npm run electron:build -- --linux
+
+# All platforms
+npm run electron:build:all
+```
+
+#### Output Files
+
+After building, you'll find the installers in the `dist/` folder:
+- **Windows**: `.exe` installer and portable `.exe`
+- **macOS**: `.dmg` and `.zip`
+- **Linux**: `.AppImage` and `.deb` packages
+
+#### System Requirements for Building
+- Node.js 18+
+- For Windows builds: Windows 7+ or Wine on Linux/Mac
+- For macOS builds: macOS 10.13+ with Xcode
+- For Linux builds: Any Linux distribution
 
 ## License
 

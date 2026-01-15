@@ -24,11 +24,7 @@
 .DS_Store
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# debug (moved to bottom)
 
 # env files (can opt-in for committing if needed)
 .env*
@@ -39,4 +35,43 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# database
 retailer.db
+*.db
+*.sqlite
+*.sqlite3
+
+# electron-builder output
+dist/
+dist-electron/
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.snap
+
+# electron cache
+.electron-gyp/
+.electron/
+
+# native modules
+*.node
+
+# OS
+.DS_Store
+Thumbs.db
+*.lnk
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Lock files (optional - keep the one you use)
+# bun.lock
+# package-lock.json
+# yarn.lock

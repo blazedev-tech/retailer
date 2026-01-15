@@ -2,11 +2,16 @@
   "name": "retailer",
   "version": "0.1.0",
   "private": true,
+  "main": "electron.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "electron": "cross-env NODE_ENV=development ELECTRON_START_URL=http://localhost:3000 electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npm run electron\"",
+    "electron:build": "npm run build && electron-builder",
+    "electron:build:all": "npm run build && electron-builder -wl"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
@@ -31,9 +36,49 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
     "eslint": "^9",
     "eslint-config-next": "16.0.8",
     "tailwindcss": "^4",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.retailer.app",
+    "productName": "Retailer Management System",
+    "directories": {
+      "buildResources": "public"
+    },
+    "files": [
+      "electron.js",
+      ".next/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "public/**/*",
+      "retailer.db"
+    ],
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "public/icon.png"
+    },
+    "mac": {
+      "target": ["dmg", "zip"],
+      "icon": "public/icon.png",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "public/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
