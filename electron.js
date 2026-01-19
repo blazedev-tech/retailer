@@ -4,6 +4,7 @@ const { spawn } = require('child_process');
 
 let mainWindow;
 let nextServer;
+const isDev = process.env.NODE_ENV === 'development' || process.env.ELECTRON_START_URL;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -31,27 +32,38 @@ function createWindow() {
   });
 
   // Open DevTools in development
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     mainWindow.webContents.openDevTools();
   }
 }
 
 function startNextServer() {
   return new Promise((resolve, reject) => {
+    // In development mode with ELECTRON_START_URL set
     if (process.env.ELECTRON_START_URL) {
       resolve();
       return;
     }
 
-    nextServer = spawn('npm', ['run', 'start'], {
-      shell: true,
+    // In production, use node directly to start Next.js server
+    const nodeCommand = process.platform === 'win32' ? 'node.exe' : 'node';
+    const nextServerPath = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
+    
+    nextServer = spawn(nodeCommand, [nextServerPath, 'start', '-p', '3000'], {
+      cwd: __dirname,
       env: { ...process.env, PORT: '3000' },
+      shell: false,
     });
+
+    let serverReady = false;
 
     nextServer.stdout.on('data', (data) => {
       console.log(`Next.js: ${data}`);
-      if (data.toString().includes('ready')) {
-        setTimeout(resolve, 1000);
+      if (data.toString().includes('ready') || data.toString().includes('started')) {
+        if (!serverReady) {
+          serverReady = true;
+          setTimeout(resolve, 1000);
+        }
       }
     });
 
@@ -63,8 +75,15 @@ function startNextServer() {
       console.log(`Next.js process exited with code ${code}`);
     });
 
+    nextServer.on('error', (error) => {
+      console.error('Failed to start Next.js server:', error);
+      reject(error);
+    });
+
     setTimeout(() => {
-      reject(new Error('Next.js server timeout'));
+      if (!serverReady) {
+        reject(new Error('Next.js server timeout'));
+      }
     }, 30000);
   });
 }
