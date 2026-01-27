@@ -2,9 +2,6 @@ name: Build Windows App
 
 on:
   push:
-    branches: [ main, master ]
-    tags:
-      - 'v*'
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
@@ -27,7 +24,7 @@ jobs:
         run: npm install
 
       - name: Rebuild native modules for Electron
-        run: npm rebuild better-sqlite3
+        run: npx electron-builder install-app-deps
 
       - name: Build Next.js app
         run: npm run build
