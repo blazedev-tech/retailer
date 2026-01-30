@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.github
+dist
+build
+.vscode
+.idea
+*.log
+.DS_Store
+retailer.db
+retailer.db-journal
+retailer.db-shm
+retailer.db-wal

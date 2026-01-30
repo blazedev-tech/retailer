@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: retailer-web
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist the SQLite database
+      # We mount the local retailer.db to the container's /app/retailer.db
+      # Ensure this file exists on the host, or Docker will create it as a directory
+      - ./retailer.db:/app/retailer.db
+    environment:
+      - NODE_ENV=production
